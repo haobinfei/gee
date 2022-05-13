@@ -7,13 +7,17 @@ import (
 type HandlerFunc func(c *Context)
 
 type Engine struct {
+	*RouterGroup
 	router *router
+	group  []*RouterGroup
 }
 
 func New() *Engine {
-	return &Engine{
-		router: newRouter(),
-	}
+
+	engine := &Engine{router: newRouter()}
+	engine.RouterGroup = &RouterGroup{engine: engine}
+	engine.group = []*RouterGroup{engine.RouterGroup}
+	return engine
 }
 
 func (engine *Engine) GET(path string, handler HandlerFunc) {
